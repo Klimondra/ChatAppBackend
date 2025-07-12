@@ -1,0 +1,43 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Build output directories
+/bin/
+/build/
+/out/
+
+# Vendor directory (pokud používáš vendoring)
+vendor/
+
+# Go mod files (někdy se .sum nechává, ale může být i ignorován)
+/go.sum
+
+# Go workspace file (novinka, pokud používáš workspace)
+/go.work
+
+# Cache a temporary soubory
+*.log
+*.tmp
+*.swp
+*.DS_Store
+
+# Editor a IDE soubory
+.idea/
+.vscode/
+*.iml
+
+# Environmentální proměnné
+.env
+
+# Složky a soubory Go toolchainu
+/pkg/
+/.modcache/
+/.gopath/
+/.gotmp/
+
+# Test output
+*.out
