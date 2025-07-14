@@ -1,6 +1,7 @@
 package database
 
 import (
+	"chatapp/models"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -38,7 +39,9 @@ func ConnectDB() error {
 
 func migrateModels() error {
 	modelsToMgirate := []interface{}{
-		// Zde vložit modely k migraci
+		&models.ChatRoom{},
+		&models.ChatMember{},
+		&models.Message{},
 	}
 
 	for _, model := range modelsToMgirate {
