@@ -2,6 +2,7 @@ package router
 
 import (
 	"chatapp/router/api"
+	"chatapp/router/ws"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"os"
@@ -19,6 +20,7 @@ func Init() *gin.Engine {
 	}))
 
 	api.RegisterContactApi(router)
+	ws.RegisterWS(router)
 
 	return router
 }

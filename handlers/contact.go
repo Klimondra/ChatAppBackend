@@ -63,7 +63,7 @@ func GetContactList(context *gin.Context) {
 				var lastMessage models.Message
 				go func() {
 					defer wgContacts.Done()
-					result = database.DB.Where("chat_room_id = ?", room.RoomID).First(&lastMessage)
+					result = database.DB.Where("chat_room_id = ?", room.RoomID).Last(&lastMessage)
 				}()
 
 				wgContacts.Wait()
