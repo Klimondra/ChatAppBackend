@@ -8,7 +8,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
+
+var Clients = make(map[int]*websocket.Conn)
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -25,7 +28,19 @@ func HandleWebSocket(context *gin.Context) {
 		log.Println(err)
 		return
 	}
-	defer conn.Close()
+
+	idStr := context.Query("id")
+	id, errIdToInt := strconv.Atoi(idStr)
+	if errIdToInt != nil {
+		log.Println(errIdToInt)
+	}
+	Clients[id] = conn
+
+	defer func() {
+		conn.Close()
+		delete(Clients, id)
+		log.Println("WebSocket connection closed:", id)
+	}()
 
 	log.Println("New WebSocket connection established")
 
@@ -54,5 +69,8 @@ func handleWsMessage(conn *websocket.Conn, msg dto.IncomingMessage) {
 
 	case "joinChat":
 		JoinChat(conn, msg)
+
+	case "sendMessage":
+		SendMessage(conn, msg)
 	}
 }
