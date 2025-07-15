@@ -16,6 +16,7 @@ type userId struct {
 
 func GetContactList(context *gin.Context) {
 	context.Writer.Header().Del("Content-Encoding")
+	context.Header("Content-Type", "application/json")
 
 	var id userId
 	if err := context.ShouldBindJSON(&id); err != nil {
