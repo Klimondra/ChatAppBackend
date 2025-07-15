@@ -15,6 +15,8 @@ type userId struct {
 }
 
 func GetContactList(context *gin.Context) {
+	context.Writer.Header().Del("Content-Encoding")
+
 	var id userId
 	if err := context.ShouldBindJSON(&id); err != nil {
 		context.JSON(400, gin.H{"error": "Invalid user ID"})
