@@ -11,7 +11,12 @@ import (
 	"strconv"
 )
 
-var Clients = make(map[int]*websocket.Conn)
+type LiveSession struct {
+	RoomID int `json:"roomId"`
+	UserID int `json:"userId"`
+}
+
+var Clients = make(map[LiveSession]*websocket.Conn)
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -29,17 +34,28 @@ func HandleWebSocket(context *gin.Context) {
 		return
 	}
 
-	idStr := context.Query("id")
-	id, errIdToInt := strconv.Atoi(idStr)
+	userIdStr := context.Query("user_id")
+	userId, errIdToInt := strconv.Atoi(userIdStr)
 	if errIdToInt != nil {
 		log.Println(errIdToInt)
 	}
-	Clients[id] = conn
+
+	roomIdStr := context.Query("room_id")
+	roomId, errRoomIdToInt := strconv.Atoi(roomIdStr)
+	if errRoomIdToInt != nil {
+		log.Println(errRoomIdToInt)
+	}
+
+	ls := LiveSession{
+		UserID: userId,
+		RoomID: roomId,
+	}
+	Clients[ls] = conn
 
 	defer func() {
 		conn.Close()
-		delete(Clients, id)
-		log.Println("WebSocket connection closed:", id)
+		delete(Clients, LiveSession{UserID: userId, RoomID: roomId})
+		log.Println("WebSocket connection closed:", userId)
 	}()
 
 	log.Println("New WebSocket connection established")

@@ -85,7 +85,7 @@ func SendMessage(conn *websocket.Conn, msg dto.IncomingMessage) {
 	}
 
 	for _, otherMember := range otherMembers {
-		otherConn, exists := Clients[otherMember.UserID]
+		otherConn, exists := Clients[LiveSession{UserID: otherMember.UserID, RoomID: otherMember.RoomID}]
 		if !exists {
 			continue
 		}
