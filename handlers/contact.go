@@ -68,10 +68,21 @@ func GetContactList(context *gin.Context) {
 
 				wgContacts.Wait()
 
+				key, _ := GetKey()
+				var decryptedMessage string
+				if lastMessage.Content != "" {
+					var decryptErr error
+					decryptedMessage, decryptErr = Decrypt(lastMessage.Content, key)
+					if decryptErr != nil {
+						context.JSON(502, gin.H{"error": "Decryption error"})
+						return
+					}
+				}
+
 				contactList.Contacts = append(contactList.Contacts, dto.ContactForList{
 					RoomID:             room.RoomID,
 					RecipientName:      secondMember.User.Name,
-					LastMessageContent: lastMessage.Content,
+					LastMessageContent: decryptedMessage,
 					LastMessageTime:    lastMessage.Timestamp.Format(time.RFC3339),
 				})
 
