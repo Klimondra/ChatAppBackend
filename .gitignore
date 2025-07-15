@@ -13,9 +13,6 @@
 # Vendor directory (pokud používáš vendoring)
 vendor/
 
-# Go mod files (někdy se .sum nechává, ale může být i ignorován)
-/go.sum
-
 # Go workspace file (novinka, pokud používáš workspace)
 /go.work
 
