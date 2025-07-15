@@ -55,10 +55,17 @@ func SendMessage(conn *websocket.Conn, msg dto.IncomingMessage) {
 		return
 	}
 
+	key, _ := GetKey()
+	encryptedMessage, errEncrypt := Encrypt(request.Content, key)
+	if errEncrypt != nil {
+		log.Println("❌ Chyba při šifrování zprávy:", errEncrypt)
+		return
+	}
+
 	newMessage := models.Message{
 		ChatRoomID: roomId,
 		SenderID:   request.UserId,
-		Content:    request.Content,
+		Content:    encryptedMessage,
 		Timestamp:  timestamp,
 	}
 
@@ -85,7 +92,7 @@ func SendMessage(conn *websocket.Conn, msg dto.IncomingMessage) {
 
 		responseMessage := dto.MessageResponse{
 			MessageId: newMessage.ID,
-			Content:   newMessage.Content,
+			Content:   request.Content,
 			Sender:    newMessage.Sender.Name,
 			Timestamp: newMessage.Timestamp.Format(time.RFC3339),
 		}

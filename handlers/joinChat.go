@@ -74,6 +74,8 @@ func JoinChat(conn *websocket.Conn, msg dto.IncomingMessage) {
 
 	var messagesResponse []dto.MessageResponse
 
+	key, _ := GetKey()
+
 	for _, message := range messages {
 		var senderName string
 
@@ -83,9 +85,15 @@ func JoinChat(conn *websocket.Conn, msg dto.IncomingMessage) {
 			senderName = secondMember.User.Name
 		}
 
+		decryptedMessage, errEncrypt := Decrypt(message.Content, key)
+		if errEncrypt != nil {
+			log.Println("❌ Chyba při šifrování zprávy:", errEncrypt)
+			return
+		}
+
 		messagesResponse = append(messagesResponse, dto.MessageResponse{
 			MessageId: message.ID,
-			Content:   message.Content,
+			Content:   decryptedMessage,
 			Sender:    senderName,
 			Timestamp: message.Timestamp.Format(time.RFC3339),
 		})
