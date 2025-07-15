@@ -39,7 +39,7 @@ func GetContactList(context *gin.Context) {
 			var roomDetails models.ChatRoom
 			result = database.DB.Where("id = ?", room.RoomID).First(&roomDetails)
 			if result.Error != nil {
-				context.JSON(500, gin.H{"error": "Room not found"})
+				//context.JSON(500, gin.H{"error": "Room not found"})
 				return
 			}
 
@@ -53,7 +53,7 @@ func GetContactList(context *gin.Context) {
 
 					result = database.DB.Where("room_id = ? AND user_id != ?", room.RoomID, id.Id).First(&secondMember)
 					if result.Error != nil {
-						context.JSON(500, gin.H{"error": "Second member not found"})
+						// context.JSON(500, gin.H{"error": "Second member not found"})
 						return
 					}
 					database.DB.Preload("User").Find(&secondMember)
@@ -74,7 +74,7 @@ func GetContactList(context *gin.Context) {
 					var decryptErr error
 					decryptedMessage, decryptErr = Decrypt(lastMessage.Content, key)
 					if decryptErr != nil {
-						context.JSON(502, gin.H{"error": "Decryption error"})
+						// context.JSON(502, gin.H{"error": "Decryption error"})
 						return
 					}
 				}
