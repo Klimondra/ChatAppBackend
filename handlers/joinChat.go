@@ -59,8 +59,7 @@ func JoinChat(conn *websocket.Conn, msg dto.IncomingMessage) {
 		defer wg.Done()
 
 		err = database.DB.
-			Where("id != ?", request.UserId).
-			Where("room_id = ?", request.ChatID).
+			Where("user_id != ? AND room_id = ?", request.UserId, request.ChatID).
 			First(&secondMember).Error
 
 		database.DB.Preload("User").Find(&secondMember)
